@@ -109,7 +109,7 @@ export default function Home() {
 
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4  items-center justify-center  w-full">
 
-                            <Link>
+                            <Link to={'announcements'}>
                                 <Card>
 
                                     <CardContent className="pt-6 flex flex-col items-start justify-between h-48">

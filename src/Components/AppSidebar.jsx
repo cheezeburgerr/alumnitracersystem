@@ -113,7 +113,7 @@ const data = {
 
         {
             title: "Programs",
-            url: "/admin/profile",
+            url: "/admin/programs",
             icon: Book,
             isNonSubbed: true, // Custom property to identify non-subbed items
         },

@@ -9,6 +9,21 @@ import { toast } from "../../../hooks/use-toast";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useState } from "react";
+
+
 // Define the shape of our data.
 export const columns = ({ data, setData }) => [
   {
@@ -30,15 +45,17 @@ export const columns = ({ data, setData }) => [
   {
     id: "actions",
     cell: ({ row }) => {
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+
       const id = row.original.id;
       const adminData = JSON.parse(localStorage.getItem('admin'));
       const handleArchive = async (status1) => {
         try {
           await axios.patch(`${API_BASE_URL}/announcement/${id}/archive`, { status: status1, user_ID: adminData.id });
-  
+
           const updatedData = data.filter((item) => item.id !== id);
           setData(updatedData); // Update state to remove the announcement
-  
+
           toast({
             title: `Announcement ${status1 === 'Archived' ? 'archived' : 'unarchived'} successfully.`,
             description: new Date().toString(),
@@ -52,7 +69,31 @@ export const columns = ({ data, setData }) => [
           });
         }
       };
-  
+
+      const handleDelete = async () => {
+        try {
+          await axios.delete(`${API_BASE_URL}/announcements/${id}`,
+            {
+              data: { user_ID: adminData.id },
+            }
+          );
+
+          const updatedData = data.filter((item) => item.id !== id);
+          setData(updatedData); // Update state to remove the announcement
+
+          toast({
+            title: `Announcement deleted successfully.`,
+            description: new Date().toString(),
+          });
+        } catch (error) {
+          console.error("Error archiving/unarchiving announcement:", error);
+          toast({
+            title: `Failed to delete announcement.`,
+            description: new Date().toString(),
+            variant: 'destructive',
+          });
+        }
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -65,19 +106,48 @@ export const columns = ({ data, setData }) => [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to={`/admin/view-alumni/${id}`}>View Announcement</Link>
+              <Link to={`/admin/announcements/view/${id}`}>View Announcement</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                handleArchive(row.original.status === 'Active' ? 'Archived' : 'Active')
+                handleArchive(row.original.status === "Active" ? "Archived" : "Active")
               }
             >
-              {row.original.status === 'Active' ? 'Archive' : 'Unarchive'}
+              {row.original.status === "Active" ? "Archive" : "Unarchive"}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              Delete Announcement
             </DropdownMenuItem>
           </DropdownMenuContent>
+
+         
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete this record.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    handleDelete();
+                    setIsDialogOpen(false);
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenu>
       );
     },
   }
-  
+
 ];

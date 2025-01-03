@@ -8,18 +8,18 @@ import NotificationBox from "../Components/NotificationBox";
 import { useToast } from "../hooks/use-toast";
 import { Toaster } from "../Components/ui/toaster"
 
-export default function AdminLayout({ children, pageName, breadcrumb }) {
+export default function AdminLayout({ children, pageName, breadcrumb, addButton }) {
 
     const { toast } = useToast()
 
-    
+
     return (
         <>
 
-        
+
             <SidebarProvider>
 
-                <Toaster/>
+                <Toaster />
                 <AppSidebar />
                 <SidebarInset>
                     <main>
@@ -28,20 +28,28 @@ export default function AdminLayout({ children, pageName, breadcrumb }) {
                                 <SidebarTrigger className="-ml-1" />
                                 <Separator orientation="vertical" className="mr-2 h-4" />
 
+                                <div className="hidden md:block">
                                 {breadcrumb}
+                                </div>
                             </div>
                             <div className="flex items-center gap-6">
                                 {/* <Search size={18} /> */}
                                 <NotificationBox />
-                                
+
                                 <ModeToggle />
                             </div>
 
                         </header>
                         <div className="p-4 lg:p-6">
-                            {pageName && (
-                                <h1 className="font-semibold text-2xl mb-4">{pageName}</h1>
-                            )}
+                            <div className="flex justify-between items-center mb-4">
+                                {pageName && (
+                                    <h1 className="font-semibold text-2xl ">{pageName}</h1>
+                                )}
+                       
+
+                                    { addButton }
+    
+                            </div>
                             {children}
                         </div>
                     </main>

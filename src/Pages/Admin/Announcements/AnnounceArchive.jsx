@@ -12,8 +12,11 @@ import {
 import { columns } from "./columns";
 
 import { DataTable } from "@/Components/data-table";
+import { Button } from "@/Components/ui/button";
 import axios from "axios";
 import { API_BASE_URL } from "../../../Components/api";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 export default function AnnouncementsArchive() {
     const [data, setData] = useState([]);
@@ -50,8 +53,8 @@ export default function AnnouncementsArchive() {
 
                     </BreadcrumbList>
                 </Breadcrumb>
-            }>
-                <DataTable columns={columns({ data, setData })} data={data} getColumn={'announcement_title'}/>
+            } >
+                <DataTable columns={columns({ data, setData })} data={data} getColumn={'announcement_title'} />
             </AdminLayout>
         </>
     )

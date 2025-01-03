@@ -32,6 +32,10 @@ import AlumniEmploymentDetails from "./Pages/Admin/AlumniEmploymentDetails";
 import AlumniEmploymentHistory from "./Pages/Admin/AlumniEmploymentHistory";
 import Announcements from "./Pages/Admin/Announcements/Announcements";
 import AnnouncementsArchive from "./Pages/Admin/Announcements/AnnounceArchive";
+import AddAnnouncement from "./Pages/Admin/Announcements/AddAnnouncement";
+import ViewAnnouncement from "./Pages/Admin/Announcements/ViewAnnouncement";
+import AnnouncementPage from "./Pages/AnnouncementPage";
+import Courses from "./Pages/Admin/Courses/Courses";
 
 const UserRoutes = ({ user }) => {
   return (
@@ -59,6 +63,7 @@ const AppRoutes = ({ user, admin }) => {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/announcements" element={<AnnouncementPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -85,9 +90,11 @@ const AppRoutes = ({ user, admin }) => {
             <Route path="officiallist" element={<OfficialList />} />
             <Route path="archive" element={<Archive />} />
 
-
+            <Route path="programs" element={<Courses />} />
             <Route path="announcements/active" element={<Announcements />} />
             <Route path="announcements/archive" element={<AnnouncementsArchive />} />
+            <Route path="announcements/view/:id" element={<ViewAnnouncement />} />
+            {/* <Route path="announcements/add" element={<AddAnnouncement />} /> */}
             <Route path="view-alumni/:id" element={<ViewAlumni />} />
             <Route path="employment-details/:id" element={<AlumniEmploymentDetails />} />
             <Route path="employment-history/:id" element={<AlumniEmploymentHistory />} />

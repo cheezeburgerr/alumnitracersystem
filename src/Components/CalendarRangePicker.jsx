@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { addDays, format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,27 +12,45 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-function CalendarDateRangePicker({ className, setSelectedDateRange }) {
+function CalendarDateRangePicker({ className, setSelectedDateRange, initialSelectedDateRange }) {
   const [date, setDate] = useState({
-    from: '',
-    to: '',
+    from: initialSelectedDateRange?.from || '',
+    to: initialSelectedDateRange?.to || '',
   });
+
+  useEffect(() => {
+    // Update the state if initialSelectedDateRange changes
+    if (initialSelectedDateRange?.from && initialSelectedDateRange?.to) {
+      setDate({
+        from: new Date(initialSelectedDateRange.from),
+        to: new Date(initialSelectedDateRange.to),
+      });
+    }
+  }, [initialSelectedDateRange]);
 
   const handleDateSelect = (selected) => {
     // Ensure the selected dates are valid Date objects
-    const selectedFrom = selected?.from ? new Date(selected.from) : '';
-    const selectedTo = selected?.to ? new Date(selected.to) : '';
+    const selectedFrom = selected?.from ? new Date(selected.from) : null;
+    const selectedTo = selected?.to ? new Date(selected.to) : null;
+
+    // Format dates to 'YYYY-MM-DD' in local time zone
+    const formattedFrom = selectedFrom ? format(selectedFrom, "yyyy-MM-dd") : '';
+    const formattedTo = selectedTo ? format(selectedTo, "yyyy-MM-dd") : '';
+
+    // Validate date range
+    if (formattedFrom && formattedTo && formattedTo < formattedFrom) {
+        alert("End date must be after start date");
+        return;
+    }
 
     const normalizedDates = {
-      from: selectedFrom,
-      to: selectedTo,
+        from: formattedFrom,
+        to: formattedTo,
     };
 
     setDate(normalizedDates);
-    setSelectedDateRange(normalizedDates); // Update the date range in the parent
-
-    // console.log(selectedFrom);
-  };
+    setSelectedDateRange(normalizedDates); // Update the parent component with normalized dates
+};
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -42,7 +60,7 @@ function CalendarDateRangePicker({ className, setSelectedDateRange }) {
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[260px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal",
               !date?.from && "text-muted-foreground"
             )}
             size="sm"
