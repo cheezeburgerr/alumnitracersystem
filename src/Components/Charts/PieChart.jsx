@@ -145,7 +145,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export default function PieChartComponent({ data }) {
+export default function PieChartComponent({ data, }) {
   console.log(data);
 
   const totalValue = useMemo(() => {
@@ -173,15 +173,15 @@ export default function PieChartComponent({ data }) {
 
       Employed: {
         label: "Employed",
-        color: "hsl(var(--chart-1))",
+        fill: "hsl(var(--chart-1))",
       },
       Unemployed: {
         label: "Unemployed",
-        color: "hsl(var(--chart-2))",
+        fill: "hsl(var(--chart-2))",
       },
       NeverEmployed: {
         label: "Never-Employed",
-        color: "hsl(var(--chart-3))",
+        fill: "hsl(var(--chart-3))",
       },
     
     };
@@ -202,13 +202,13 @@ export default function PieChartComponent({ data }) {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
+              data={data}
               dataKey="value"
               nameKey="label"
               innerRadius={60}
               strokeWidth={5}
             >
-              {/* <Label
+              <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
@@ -230,13 +230,13 @@ export default function PieChartComponent({ data }) {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Users
+                          Alumni
                         </tspan>
                       </text>
                     );
                   }
                 }}
-              /> */}
+              />
             </Pie>
           </PieChart>
         </ChartContainer>

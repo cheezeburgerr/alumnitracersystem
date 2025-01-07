@@ -24,15 +24,15 @@ const detailsFormSchema = z.object({
     address: z.string().min(8, { message: "Address must be at least 8 characters." }),
     region: z.string().min(1, { message: "Please select a valid region." }),
     province: z.string().min(2, { message: "Province must be at least 2 characters." }),
-    location_of_residence: z.string().min(1, { message: "Please select a valid location." }),
+    location: z.string().min(1, { message: "Please select a valid location." }),
     educational_attainment: z.string().min(1, { message: "Please select a valid attainment." }),
     specialization: z.string().min(8, { message: "Specialization must be at least 8 characters." }),
     // college: z.string().min(2, { message: "College must be at least 2 characters." }),
     year: z.string().min(1, { message: "Please select a valid year." }),
     honors: z.string().optional(),
     exams: z.string().optional(),
-    date_taken: z.string().optional(),
-    rating: z.string().optional(),
+    // date_taken: z.string().optional(),
+    // rating: z.string().optional(),
 });
 
 export function DetailsForm({ id }) {
@@ -157,7 +157,7 @@ export function DetailsForm({ id }) {
 
                 <FormField
                     control={form.control}
-                    name="location_of_residence"
+                    name="location"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Location</FormLabel>
@@ -251,7 +251,7 @@ export function DetailsForm({ id }) {
                         <FormItem>
                             <FormLabel>Year Graduated</FormLabel>
                             <FormControl>
-                                <Input type="date" {...field} />
+                                <Input {...field} type="number" min="1900" max="2099" step="1"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -286,7 +286,7 @@ export function DetailsForm({ id }) {
                     )}
                 />
 
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="date_taken"
                     render={({ field }) => (
@@ -312,7 +312,7 @@ export function DetailsForm({ id }) {
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                /> */}
 
                 {/* Add any other fields as necessary */}
                 <Button type="submit">Update Profile</Button>

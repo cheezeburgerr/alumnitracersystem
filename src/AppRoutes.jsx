@@ -36,6 +36,8 @@ import AddAnnouncement from "./Pages/Admin/Announcements/AddAnnouncement";
 import ViewAnnouncement from "./Pages/Admin/Announcements/ViewAnnouncement";
 import AnnouncementPage from "./Pages/AnnouncementPage";
 import Courses from "./Pages/Admin/Courses/Courses";
+import AccountActivation from "./Pages/AccountActivation";
+import RequestNewLink from "./Pages/RequestNewLink";
 
 const UserRoutes = ({ user }) => {
   return (
@@ -66,7 +68,8 @@ const AppRoutes = ({ user, admin }) => {
           <Route path="/announcements" element={<AnnouncementPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
+          <Route path="/account/activate/:token" element={<AccountActivation />} />
+          <Route path="/request-new-link" element={<RequestNewLink />} />
           {/* User Protected Routes */}
           <Route path="/profile" element={<UserRoutes user={user} />}>
             <Route index element={<Profile />} />
