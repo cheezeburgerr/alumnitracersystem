@@ -38,9 +38,12 @@ export const columns = ({ data, setData }) => [
       return <DataTableColumnHeader column={column} title="Employment Status" />;
     },
     cell: ({ row }) => {
-      return <Badge>{row.original.employment_status.status.status}</Badge>;
+      // Check if status.status is null, then set it to "Never-Employed"
+      const status = row.original.employment_status?.status?.status || "Never-Employed";
+      return <Badge>{status}</Badge>;
     },
   },
+  
   {
     accessorKey: "email",
     header: ({ column }) => {

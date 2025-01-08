@@ -28,6 +28,9 @@ import moment from "moment";
 import { API_BASE_URL } from "../../Components/api";
 import LoadingState from "../../Components/LoadingState";
 import { Eye } from "lucide-react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+
+import AlumniReport from "../Reports/AlumniReport";
 
 
 
@@ -43,7 +46,7 @@ export default function ViewAlumni() {
             .get(`${API_BASE_URL}/users/${id}`)
             .then((response) => {
                 setUser(response.data);
-            
+
                 // setLoading(false);
             })
             .catch((error) => {
@@ -93,24 +96,72 @@ export default function ViewAlumni() {
                     </Breadcrumb>
 
                 </>
+            } addButton={
+                <PDFDownloadLink
+                    document={<AlumniReport user={user} />}
+                    fileName="alumni_report.pdf"
+                >
+                    {({ loading }) =>
+                        loading ? (
+                            <Button variant="outline" disabled>
+                                Generating Report...
+                            </Button>
+                        ) : (
+                            <Button variant="outline">Download Report</Button>
+                        )
+                    }
+                </PDFDownloadLink>
             }>
 
                 {user ? (
 
                     <>
                         <div className="md:flex gap-4 items-start space-y-4 md:space-y-0">
-                            <Card className="md:w-1/3">
-                                <CardHeader>
-                                    {/* <CardTitle> Profile</CardTitle> */}
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-center flex flex-col justify-center items-center">
-                                        <img src="/../src/assets/profile_placeholder.png" alt="" className="h-36" />
-                                        <h1 className="font-bold text-2xl mt-2">{user.first_name + ' ' + user.middle_name + ' ' + user.last_name}</h1>
-                                        <Badge variant="outline">{user?.student_ID}</Badge>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <div className="md:w-1/3 space-y-4">
+                                <Card>
+                                    <CardHeader>
+                                        {/* <CardTitle> Profile</CardTitle> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-center flex flex-col justify-center items-center">
+                                            <img src="/../src/assets/profile_placeholder.png" alt="" className="h-36" />
+                                            <h1 className="font-bold text-2xl mt-2">{user.first_name + ' ' + user.middle_name + ' ' + user.last_name}</h1>
+                                            <Badge variant="outline">{user?.student_ID}</Badge>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Education</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <table className="text-sm text-left w-full p">
+                                            <tr className="border-b">
+                                                <th>Course</th>
+                                                <td className="py-2">{user.course.course_name}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Batch</th>
+                                                <td className="py-2">{user.year}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Specialization</th>
+                                                <td className="py-2">{user.specialization || 'NA'}</td>
+                                            </tr >
+                                            <tr className="border-b">
+                                                <th>Honors</th>
+                                                <td className="py-2">{user.honors || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Exams</th>
+                                                <td className="py-2">{user.prof_exams || 'NA'}</td>
+                                            </tr>
+
+
+                                        </table>
+                                    </CardContent>
+                                </Card>
+                            </div>
                             <div className="w-full space-y-4">
                                 <Card>
                                     <CardHeader>
@@ -124,23 +175,35 @@ export default function ViewAlumni() {
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Email</th>
-                                                <td className="py-2">{user.email}</td>
+                                                <td className="py-2">{user.email || 'NA'}</td>
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Contact Number</th>
-                                                <td className="py-2">{user.contact_number}</td>
+                                                <td className="py-2">{user.contact_number || 'NA'}</td>
                                             </tr >
                                             <tr className="border-b">
                                                 <th>Birthday</th>
-                                                <td className="py-2">{moment(user.birthday).format('MMMM d, YYYY')}</td>
+                                                <td className="py-2">{moment(user.birthday).format('MMMM d, YYYY') || 'NA'}</td>
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Address</th>
-                                                <td className="py-2">{user.address}</td>
+                                                <td className="py-2">{user.address || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Province</th>
+                                                <td className="py-2">{user.province || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Location</th>
+                                                <td className="py-2">{user.location || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Region</th>
+                                                <td className="py-2">{user.region || 'NA'}</td>
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Civil Status</th>
-                                                <td className="py-2">{user.civil_status}</td>
+                                                <td className="py-2">{user.civil_status || 'NA'}</td>
                                             </tr>
 
                                         </table>
@@ -151,10 +214,10 @@ export default function ViewAlumni() {
                                         <div className="flex justify-between">
                                             <CardTitle>Employment Status</CardTitle>
                                             <Link to={`/admin/employment-history/${user.id}`}>
-                                <button className="text-primary text-sm font-bold">
-                                    View History
-                                </button>
-                                </Link>
+                                                <button className="text-primary text-sm font-bold">
+                                                    View History
+                                                </button>
+                                            </Link>
                                         </div>
                                     </CardHeader>
                                     <CardContent >

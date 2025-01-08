@@ -27,6 +27,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Button } from "@/Components/ui/button";
+import MasterListReport from "../../../Pages/Reports/MasterListReport";
 
 
 export default function DemoPage() {
@@ -72,6 +75,21 @@ export default function DemoPage() {
                 </Breadcrumb>
 
             </>
+        } addButton={
+            <PDFDownloadLink
+                document={<MasterListReport data={data} />}
+                fileName="alumni_report.pdf"
+            >
+                {({ loading }) =>
+                    loading ? (
+                        <Button variant="outline" disabled>
+                            Generating Report...
+                        </Button>
+                    ) : (
+                        <Button variant="outline">Download Report</Button>
+                    )
+                }
+            </PDFDownloadLink>
         }>
 
                  <DataTable columns={columns({ data, setData })} data={data} />
