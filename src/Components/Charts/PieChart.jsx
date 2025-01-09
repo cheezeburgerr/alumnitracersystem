@@ -145,7 +145,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export default function PieChartComponent({ data, }) {
+export default function PieChartComponent({ data,title,description }) {
   console.log(data);
 
   const totalValue = useMemo(() => {
@@ -191,8 +191,8 @@ export default function PieChartComponent({ data, }) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Employment Status</CardTitle>
-        <CardDescription>Employment Distribution</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer className="mx-auto aspect-square max-h-[250px]" config={chartConfig}>
@@ -242,9 +242,9 @@ export default function PieChartComponent({ data, }) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
+        {/* <div className="flex items-center gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
+        </div> */}
         <div className="leading-none text-muted-foreground">
           Showing employment status distribution
         </div>
