@@ -227,8 +227,8 @@ export default function EmploymentForm() {
                     <CardContent>
                         {employmentStatus && employmentStatus.find(status => status.id === selectedStatus)?.questions.map((question, index) => (
                             <div key={index} className="mb-4 mt-4 space-y-2">
-                                <Label>{question.questions}</Label>
-
+                                <Label> {index+1}. {question.questions}</Label>
+                           
                                 {question.question_type === "text" && (
                                     <Input
                                         type="text"
