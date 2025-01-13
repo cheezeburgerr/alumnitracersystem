@@ -19,18 +19,20 @@ import LoadingState from "../../Components/LoadingState";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { toast } from "../../hooks/use-toast";
+
 // Schema
 const detailsFormSchema = z.object({
     address: z.string().min(8, { message: "Address must be at least 8 characters." }),
     region: z.string().min(1, { message: "Please select a valid region." }),
     province: z.string().min(2, { message: "Province must be at least 2 characters." }),
     location: z.string().min(1, { message: "Please select a valid location." }),
-    educational_attainment: z.string().min(1, { message: "Please select a valid attainment." }),
+    course_ID: z.string().min(1, { message: "Please select a valid attainment." }),
     specialization: z.string().min(8, { message: "Specialization must be at least 8 characters." }),
     // college: z.string().min(2, { message: "College must be at least 2 characters." }),
     year: z.string().min(1, { message: "Please select a valid year." }),
     honors: z.string().optional(),
-    exams: z.string().optional(),
+    prof_exams: z.string().optional(),
     // date_taken: z.string().optional(),
     // rating: z.string().optional(),
 });
@@ -42,7 +44,7 @@ export function DetailsForm({ id }) {
     });
 
     const [userData, setUserData] = useState(null);
-
+    const [courses, setCourses] = useState(null);
     useEffect(() => {
         if (user2 && user2.id) {
             axios
@@ -55,6 +57,19 @@ export function DetailsForm({ id }) {
                 });
         }
     }, [user2]);
+
+    useEffect(() => {
+
+        axios
+            .get(`${API_BASE_URL}/courses`)
+            .then((response) => {
+                setCourses(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
+            });
+
+    }, []);
 
     const form = useForm({
         resolver: zodResolver(detailsFormSchema),
@@ -74,10 +89,16 @@ export function DetailsForm({ id }) {
         axios
             .put(`${API_BASE_URL}/users/${user2.id}`, data)
             .then((response) => {
-                console.log("Profile updated successfully", response.data);
+                toast({
+                    title: "Profile Updated Successfully",
+                    description: new Date().toString()
+                })
             })
             .catch((error) => {
-                console.error("Error updating profile:", error);
+                toast({
+                    title: "Error Updating Profile",
+                    description: new Date().toString()
+                })
             });
     };
 
@@ -182,7 +203,7 @@ export function DetailsForm({ id }) {
 
                 <FormField
                     control={form.control}
-                    name="educational_attainment"
+                    name="course_ID"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Educational Attainment (Baccalaureate Degree Only)</FormLabel>
@@ -192,33 +213,12 @@ export function DetailsForm({ id }) {
                                         <SelectValue placeholder="Select educational attainment" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Bachelor of Elementary Education Major in General Enhanced Education">
-                                            Bachelor of Elementary Education Major in General Enhanced Education
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Science in Agriculture Major in General Curriculum">
-                                            Bachelor of Science in Agriculture Major in General Curriculum
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Secondary Education Major in Technology & Livelihood Education">
-                                            Bachelor of Secondary Education Major in Technology & Livelihood Education
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Secondary Education Major in Social Studies">
-                                            Bachelor of Secondary Education Major in Social Studies
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Secondary Education Major in Filipino">
-                                            Bachelor of Secondary Education Major in Filipino
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Science in Information Technology">
-                                            Bachelor of Science in Information Technology
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Science in Business Administration Major in Human Resources Development Management">
-                                            Bachelor of Science in Business Administration Major in Human Resources Development Management
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Science in Hospitality Management">
-                                            Bachelor of Science in Hospitality Management
-                                        </SelectItem>
-                                        <SelectItem value="Bachelor of Science in Office Administration">
-                                            Bachelor of Science in Office Administration
-                                        </SelectItem>
+                                        {courses?.map(course => (
+                                            <SelectItem value={course.id.toString()}>
+                                                {course.course_name}
+                                            </SelectItem>
+                                        ))}
+
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -251,7 +251,7 @@ export function DetailsForm({ id }) {
                         <FormItem>
                             <FormLabel>Year Graduated</FormLabel>
                             <FormControl>
-                                <Input {...field} type="number" min="1900" max="2099" step="1"/>
+                                <Input {...field} type="number" min="1900" max="2099" step="1" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -274,7 +274,7 @@ export function DetailsForm({ id }) {
 
                 <FormField
                     control={form.control}
-                    name="exams"
+                    name="prof_exams"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Professional Examination(s) Passed</FormLabel>

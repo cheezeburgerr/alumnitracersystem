@@ -50,7 +50,7 @@ import { useEffect, useState } from "react";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { statuses } from "./data";
 
-export function DataTable({ columns, data, getColumn = 'student_ID' }) {
+export function DataTable({ columns, data, getColumn = 'student_ID', onFilterChange }) {
   const [sorting, setSorting] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState([])
   const [columnFilters, setColumnFilters] = useState(
@@ -77,7 +77,7 @@ export function DataTable({ columns, data, getColumn = 'student_ID' }) {
   useEffect(() => {
     if (selectedDateRange) {
       const { from, to } = selectedDateRange;
-  
+
       setColumnFilters((prevFilters) => [
         ...prevFilters.filter((filter) => filter.id !== "date"), // Remove previous date filters
         {
@@ -92,6 +92,11 @@ export function DataTable({ columns, data, getColumn = 'student_ID' }) {
   }, [selectedDateRange]);
 
   console.log(selectedDateRange)
+
+
+  const handleStatusFilterChange = (selectedStatus) => {
+    onFilterChange("status", selectedStatus); // Notify parent component of filter change
+  };
 
   return (
     <div>
@@ -111,6 +116,7 @@ export function DataTable({ columns, data, getColumn = 'student_ID' }) {
               column={table.getColumn("status")}
               title="Status"
               options={statuses}
+              onChange={handleStatusFilterChange} // Capture selected filter
             />
           )}
         </div>
@@ -143,12 +149,12 @@ export function DataTable({ columns, data, getColumn = 'student_ID' }) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        
-        
+
+
       </div>
 
-    
-    
+
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

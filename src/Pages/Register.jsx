@@ -372,7 +372,7 @@ export default function Register({ className, ...props }) {
                   )}
                 </div>
                 <div className="flex gap-4 items-center justify-between">
-                  <div className="grid gap-2 w-full">
+                  <div className="grid gap-2 w-1/2">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
@@ -395,12 +395,12 @@ export default function Register({ className, ...props }) {
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue
-                          placeholder={formData.course_ID ? courses.find(course => course.id === formData.course_ID)?.course_name : "Select Course"}
+                          placeholder={"Select Course"}
                         />
                       </SelectTrigger>
                       <SelectContent>
                         {courses.map((course) => (
-                          <SelectItem key={course.id} value={course.id}>
+                          <SelectItem key={course.id} value={course.id.toString()}>
                             {course.course_name}
                           </SelectItem>
                         ))}

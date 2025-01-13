@@ -45,10 +45,6 @@ export default function AlumniLayout({ children, user, pageName }) {
       href: "/",
     },
     {
-      title: "Contact",
-      href: "/contact",
-    },
-    {
       title: "Profile",
       href: "/profile",
     },

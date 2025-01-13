@@ -142,7 +142,7 @@ export default function ViewAlumni() {
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Batch</th>
-                                                <td className="py-2">{user.year}</td>
+                                                <td className="py-2">{user.year || 'NA'}</td>
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Specialization</th>

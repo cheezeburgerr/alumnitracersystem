@@ -196,7 +196,7 @@ export default function EmploymentForm() {
                         <Label>Current Employment Status</Label>
                         <RadioGroup
                             value={selectedStatus}
-                            className="grid grid-cols-3 gap-4"
+                            className="grid grid-cols-2 gap-4"
                             onValueChange={(value) => setSelectedStatus(value)}
                         >
                             {employmentStatus && employmentStatus.map(status => (
