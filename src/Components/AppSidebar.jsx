@@ -103,11 +103,11 @@ const data = {
                     url: "/admin/analytics/alumni",
                     icon: null,
                 },
-                {
-                    title: "Employment",
-                    url: "#",
-                    icon: null,
-                },
+                // {
+                //     title: "Employment",
+                //     url: "#",
+                //     icon: null,
+                // },
             ],
         },
 
