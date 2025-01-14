@@ -8,17 +8,34 @@ export const Timeline = React.forwardRef((props, ref) => {
 });
 Timeline.displayName = 'Timeline';
 
+// export const TimelineItem = React.forwardRef((props, ref) => {
+//   const { className, ...rest } = props;
+//   return (
+//     <div
+//       ref={ref}
+//       className={cn('group relative pb-8 pl-8 sm:pl-44', className)}
+//       {...rest}
+//     />
+//   );
+// });
+// TimelineItem.displayName = 'TimelineItem';
+
 export const TimelineItem = React.forwardRef((props, ref) => {
-  const { className, ...rest } = props;
+  const { className, isFirst, ...rest } = props;
   return (
     <div
       ref={ref}
-      className={cn('group relative pb-8 pl-8 sm:pl-44', className)}
+      className={cn(
+        'group relative pb-8 pl-8 sm:pl-44',
+        !isFirst && 'opacity-50 text-muted-foreground', // Apply muted styles to non-first items
+        className
+      )}
       {...rest}
     />
   );
 });
 TimelineItem.displayName = 'TimelineItem';
+
 
 export const TimelineHeader = React.forwardRef((props, ref) => {
   const { className, ...rest } = props;

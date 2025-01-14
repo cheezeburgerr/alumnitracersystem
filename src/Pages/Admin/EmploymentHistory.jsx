@@ -90,8 +90,8 @@ export default function EmploymentHistory() {
 
                     <CardContent>
                         <Timeline className="mt-8">
-                            {employmentHistory.map((item) => (
-                                <TimelineItem key={item.id}>
+                            {employmentHistory.map((item, index) => (
+                                <TimelineItem key={item.id} isFirst={index == 0 ? true : false}>
                                     <TimelineHeader>
                                         <TimelineTime>{moment(item.created_at).format('MMMM D, YYYY')}</TimelineTime>
                                         <TimelineTitle>{item.status.status}</TimelineTitle>

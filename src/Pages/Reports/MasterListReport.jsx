@@ -8,6 +8,9 @@ const styles = StyleSheet.create({
     padding: 30,
     fontSize: 9,
   },
+  p: {
+    fontSize: 9
+  },
   mb2: {
     marginBottom: 20,
   },
@@ -52,12 +55,15 @@ const styles = StyleSheet.create({
 });
 
 // Define the PDF Document
-const MasterListReport = ({ data, generatedBy }) => (
+const MasterListReport = ({ data, generatedBy, batch }) => (
   <Document>
     <Page size="A4" orientation="landscape" style={styles.page}>
       <View style={[styles.mb2, styles.hr]}>
         <Text style={styles.header}>Pangasinan State University - San Carlos City Campus</Text>
         <Text style={[styles.header, styles.mb2]}>Alumni Report</Text>
+      </View>
+      <View style={styles.mb2}>
+        <Text style={styles.p}>Batch: {batch}</Text>
       </View>
       <View style={styles.table}>
         {/* Table Header */}

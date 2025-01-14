@@ -17,14 +17,7 @@ const sidebarNavItems = [
     title: "Security and Log In",
     href: "/profile/edit/security",
   },
-  {
-    title: "Notifications",
-    href: "/profile/edit/notifications",
-  },
-  {
-    title: "Display",
-    href: "/profile/edit/display",
-  },
+
 ];
 
 export default function Settings({ children }) {

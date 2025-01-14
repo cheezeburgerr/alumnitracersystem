@@ -98,7 +98,7 @@ export default function Home() {
                                             <CardTitle>Current Employment Status</CardTitle>
                                             <CardDescription>
 
-                                                <Badge variant={user.employment_status && user.employment_status.status.status == 'Employed' ? 'default' : 'destructive'}>{user.employment_status && user.employment_status.status.status}</Badge>
+                                                <Badge variant={user.employment_status && user.employment_status.status.status == 'Employed' ? 'default' : 'destructive'}>{user.employment_status ? user.employment_status.status.status : "Never Employed"}</Badge>
                                             </CardDescription>
                                         </div>
                                         <Link to="/profile/employmentform"><Button>Update</Button></Link>

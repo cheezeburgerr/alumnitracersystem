@@ -44,31 +44,51 @@ export default function Profile() {
     return (
         <AlumniLayout>
             <div className="md:flex gap-4 items-start space-y-4 md:space-y-0">
-                <Card className="md:w-1/3">
-                    <CardHeader />
-                    <CardContent>
-                        <div className="text-center flex flex-col justify-center items-center">
-                            <img
-                                src="./src/assets/profile_placeholder.png"
-                                alt="Profile"
-                                className="h-36"
-                            />
-                            <h1 className="font-bold text-2xl mt-2">
-                                {user?.first_name} {user?.last_name}
-                            </h1>
-                            {/* <Badge
-                                variant={
-                                    user?.employment_status?.status?.status === "Employed"
-                                        ? "default"
-                                        : "destructive"
-                                }
-                            >
-                                {user?.employment_status?.status?.status || "Unknown"}
-                            </Badge> */}
-                            <Badge variant="outline">{user?.student_ID}</Badge>
-                        </div>
-                    </CardContent>
-                </Card>
+                <div className="md:w-1/3 space-y-4">
+                                <Card>
+                                    <CardHeader>
+                                        {/* <CardTitle> Profile</CardTitle> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-center flex flex-col justify-center items-center">
+                                            <img src="/../src/assets/profile_placeholder.png" alt="" className="h-36" />
+                                            <h1 className="font-bold text-2xl mt-2">{user.first_name + ' ' + user.middle_name + ' ' + user.last_name}</h1>
+                                            <Badge variant="outline">{user?.student_ID}</Badge>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Education</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <table className="text-sm text-left w-full p">
+                                            <tr className="border-b">
+                                                <th>Course</th>
+                                                <td className="py-2">{user.course?.course_name || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Batch</th>
+                                                <td className="py-2">{user.year || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Specialization</th>
+                                                <td className="py-2">{user.specialization || 'NA'}</td>
+                                            </tr >
+                                            <tr className="border-b">
+                                                <th>Honors</th>
+                                                <td className="py-2">{user.honors || 'NA'}</td>
+                                            </tr>
+                                            <tr className="border-b">
+                                                <th>Exams</th>
+                                                <td className="py-2">{user.prof_exams || 'NA'}</td>
+                                            </tr>
+
+
+                                        </table>
+                                    </CardContent>
+                                </Card>
+                            </div>
                 <div className="w-full space-y-4">
                     <Card>
                         <CardHeader>
