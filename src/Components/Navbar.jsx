@@ -73,9 +73,9 @@ const Navbar = ({ user }) => {
 
             <NavigationMenuItem>
               <Link to="/" >
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                {/* <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Home
-                </NavigationMenuLink>
+                </NavigationMenuLink> */}
               </Link>
             </NavigationMenuItem>
             {/* <NavigationMenuItem>
@@ -115,20 +115,20 @@ const Navbar = ({ user }) => {
               </>
             ) : (
               <>
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <Link to="/login" >
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                       Login
                     </NavigationMenuLink>
                   </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
+                </NavigationMenuItem> */}
+                {/* <NavigationMenuItem>
                   <Link to="/register" >
                     <Button>
                       Register
                     </Button>
                   </Link>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
               </>
             )}
             <NavigationMenuItem>

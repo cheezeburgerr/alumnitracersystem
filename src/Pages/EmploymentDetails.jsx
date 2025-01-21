@@ -257,6 +257,7 @@ export default function EmploymentDetails({ userId }) {
                                 </div>
                             </>
                         )}
+                     
                     </CardContent>
                 </Card>
             ) : (

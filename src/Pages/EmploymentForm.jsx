@@ -199,9 +199,9 @@ export default function EmploymentForm() {
                             className="grid grid-cols-2 gap-4"
                             onValueChange={(value) => setSelectedStatus(value)}
                         >
-                         {employmentStatus &&
+                       {employmentStatus &&
     employmentStatus
-        .filter(status => status.status !== "NeverEmployed") 
+        .filter(status => status.status !== "NeverEmployed") // Exclude "Never Employed"
         .map(status => (
             <div key={status.id}>
                 <RadioGroupItem value={status.id} id={status.status} className="peer sr-only" />
@@ -295,6 +295,7 @@ export default function EmploymentForm() {
                     </CardContent>
                 </Card>
                 <div className="flex justify-between items-center my-4">
+               
                     <Button type="submit">Submit</Button>
                     <Button type="button" variant="outline" onClick={() => setFormData({ answers: [] })}>
                         Reset

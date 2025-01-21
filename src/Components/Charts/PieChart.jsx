@@ -145,7 +145,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export default function PieChartComponent({ data,title,description }) {
+export default function PieChartComponent({ data,title,description,response }) {
   console.log(data);
 
   const totalValue = useMemo(() => {
@@ -230,7 +230,7 @@ export default function PieChartComponent({ data,title,description }) {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Alumni
+                        {response}
                         </tspan>
                       </text>
                     );
@@ -245,9 +245,9 @@ export default function PieChartComponent({ data,title,description }) {
         {/* <div className="flex items-center gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div> */}
-        <div className="leading-none text-muted-foreground">
+        {/* <div className="leading-none text-muted-foreground">
           Showing employment status distribution
-        </div>
+        </div> */}
       </CardFooter>
     </Card>
   );

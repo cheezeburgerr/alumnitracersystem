@@ -41,7 +41,7 @@ export default function LineChartComponent({ data }) {
     <Card>
       <CardHeader>
         <CardTitle> Employment Status</CardTitle>
-        <CardDescription>Survey Results for this Month</CardDescription>
+        <CardDescription>Survey Results for January - December</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -64,6 +64,7 @@ export default function LineChartComponent({ data }) {
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
               dataKey="Employed"
+            
               type="monotone"
               stroke={chartConfig.employed.color}
               strokeWidth={2}
