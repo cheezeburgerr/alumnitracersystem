@@ -58,11 +58,13 @@ export default function AlumniAnalytics() {
 
         // Utility function to filter data by year
         const filterDataByYear = (data, year) => {
-            if(year === 0 || year === null){
+
+            console.log("filteryear: ",data)
+            if(year == 0 || year == null){
                 return data
             }
             else{
-                return data.filter(item => item.year === year);
+                return data.filter(item => item.year == year);
             }
           
         };
@@ -529,7 +531,7 @@ export default function AlumniAnalytics() {
                 setItrelatedreport(data)
                 console.log(data);
                     const yearFilteredData = filterDataByYear(data, selectedYear);
-
+                    console.log("yearfiltered: ", yearFilteredData)
                   // Deduplicate by user_id and keep the latest answer (if applicable)
                   const filteredLatestData = Object.values(
                     yearFilteredData.reduce((acc, choice) => {
@@ -567,6 +569,7 @@ export default function AlumniAnalytics() {
                     alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
                     label: choice.choices, // For display name
                     value: choice.alumni || choice.answer_count, // Numeric value (total count)
+
                     fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
                 }));
                 setPresentITRelatedData(formattedData);
@@ -1242,6 +1245,7 @@ const generateYearOptions = () => {
 
 <div className="flex gap-2 mb-3">
   <div className="w-full my-auto">
+
     {presentOccupationData.length > 0 &&
       renderPieChart(
         presentOccupationData,

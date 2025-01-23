@@ -116,7 +116,7 @@ const AnalyticsReport = ({ data, generatedBy,title }) => (
               <Text style={styles.tableCell}>{row.contact_number}</Text>
             </View>
             <View style={[styles.tableCol,{width: "4.6%"}]}>
-              <Text style={styles.tableCell}>{row.batch}</Text>
+              <Text style={styles.tableCell}>{row.year}</Text>
             </View>
           </View>
         ))}
