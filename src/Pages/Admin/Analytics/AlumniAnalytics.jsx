@@ -17,7 +17,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { Button } from "@/Components/ui/button";
 
 import SingleBarComponent from "@/Components/Charts/SingleBarChart"
 import BarComponent from "@/Components/Charts/BarChart"
@@ -27,6 +27,8 @@ import LineChartComponent from "@/Components/Charts/LineChart"
 import axios from "axios";
 import { API_BASE_URL } from "../../../Components/api";
 import { useEffect, useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import AnalyticsReport from "../../../Pages/Reports/AnalyticsReport";
 
 
 export default function AlumniAnalytics() {
@@ -51,6 +53,8 @@ export default function AlumniAnalytics() {
     const [presentRelevantCurriculumData, setPresentRelevantCurriculumData] = useState([]);
     const [presentCompetenciesData, setPresentCompetenciesData] = useState([]);
     const [selectedYear, setSelectedYear] = useState(null); // Default to current year
+    const [ItrelatedReport, setItrelatedreport] = useState([]);
+    
 
         // Utility function to filter data by year
         const filterDataByYear = (data, year) => {
@@ -108,7 +112,7 @@ export default function AlumniAnalytics() {
             const formattedData = groupedData.map((choice, index) => ({
                 ...choice,
                 alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                label: choice.choices, // For display name
+                label: choice.employment_status, // For display name
                 value: choice.alumni || choice.answer_count, // Numeric value (total count)
                 fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
             }));
@@ -522,6 +526,7 @@ export default function AlumniAnalytics() {
                 const response = await axios.get(`${API_BASE_URL}/analytics8`);
                 const data = response.data;
 
+                setItrelatedreport(data)
                 console.log(data);
                     const yearFilteredData = filterDataByYear(data, selectedYear);
 
@@ -1123,6 +1128,22 @@ export default function AlumniAnalytics() {
             title={title}
             description={description}
             response={title=="Employemnt Status"?"Alumni":"Responses"}
+            addButton={  <PDFDownloadLink
+                document={<AnalyticsReport data={ItrelatedReport}  title = {title} />}
+                fileName={`${title}.pdf`}
+               
+            >
+                {({ loading }) =>
+                    loading ? (
+                        <Button variant="outline" disabled>
+                            Generating Report...
+                        </Button>
+                    ) : (
+                        <Button variant="outline">Download Report</Button>
+                    )
+                }
+            </PDFDownloadLink>}
+            
           />
         ) : (
           <div className="text-center text-muted-foreground">No data available</div>
@@ -1164,6 +1185,8 @@ const generateYearOptions = () => {
                     </BreadcrumbList>
                 </Breadcrumb>
             } addButton={
+                <>
+                
                 <Select onValueChange={handleYearChange}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a year" />
@@ -1182,7 +1205,7 @@ const generateYearOptions = () => {
                 
             </Select>
             
-
+            </>
             }>
                  <div className="flex gap-2 mb-3">
               
@@ -1190,6 +1213,7 @@ const generateYearOptions = () => {
             
      
                     <div className="w-full my-auto">
+                   
 
                     {renderPieChart(
   chartData, 
