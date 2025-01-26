@@ -757,11 +757,11 @@ const generateYearOptions = () => {
                     <SelectGroup>
                         <SelectLabel>Years</SelectLabel>
                         <SelectItem value="0" onClick={() => handleYearChange({ target: { value: "0" } })}>All year</SelectItem>
-                        {[...(raw ? new Set(raw.map((item) => item.year)) : [])].map((year) => (
-      <SelectItem key={year} value={year}>
-        {year}
-      </SelectItem>
-    ))}
+                        {generateYearOptions().map((year) => (
+                            <SelectItem key={year} value={year} onClick={() => handleYearChange({ target: { value: year } })}>
+                                {year}
+                            </SelectItem>
+                        ))}
                     </SelectGroup>
                 </SelectContent>
                 
