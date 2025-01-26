@@ -54,6 +54,7 @@ export default function AlumniAnalytics() {
     const [presentCompetenciesData, setPresentCompetenciesData] = useState([]);
     const [selectedYear, setSelectedYear] = useState(null); // Default to current year
     const [ItrelatedReport, setItrelatedreport] = useState([]);
+    const [raw,setRaw] =useState([]);
     
 
         // Utility function to filter data by year
@@ -74,6 +75,7 @@ export default function AlumniAnalytics() {
                 try {
                     const response = await axios.get(`${API_BASE_URL}/analytics`);
                     const data = response.data;
+                    setRaw(data)
         
                     // Filter the data by selected year
                     const yearFilteredData = filterDataByYear(data, selectedYear);
@@ -92,33 +94,9 @@ export default function AlumniAnalytics() {
 
             console.log("Filtered Latest Data:", filteredLatestData);
 
-            // Group by answer (choices) and aggregate their counts
-            const groupedData = Object.values(
-                filteredLatestData.reduce((acc, choice) => {
-                    const answerKey = choice.choices; // Use answer/choice as the grouping key
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            ...choice,
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {})
-            );
-
-            console.log("Grouped Data with Count:", groupedData);
-
-            // Format data for display in the chart
-            const formattedData = groupedData.map((choice, index) => ({
-                ...choice,
-                alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                label: choice.employment_status, // For display name
-                value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-            }));
-                    setChartData(formattedData);
+         
+                    setChartData(filteredLatestData
+                    );
         
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -154,34 +132,9 @@ export default function AlumniAnalytics() {
         
                     console.log("Filtered Latest Data:", filteredLatestData);
         
-                    // Group by answer (choices) and aggregate their counts
-                    const groupedData = Object.values(
-                        filteredLatestData.reduce((acc, item) => {
-                            const answerKey = item.choices; // Use answer/choice as the grouping key
-                            if (!acc[answerKey]) {
-                                acc[answerKey] = {
-                                    ...item,
-                                    alumni: 1, // Start count at 1 for this answer
-                                };
-                            } else {
-                                acc[answerKey].alumni += 1; // Increment the count for this answer
-                            }
-                            return acc;
-                        }, {})
-                    );
+                
         
-                    console.log("Grouped Data with Count:", groupedData);
-        
-                    // Format data for display in the chart
-                    const formattedData = groupedData.map((item, index) => ({
-                        ...item,
-                        alumni: item.alumni || item.answer_count || 0, // Set to 0 if missing
-                        label: item.choices, // For display name
-                        value: item.alumni || item.answer_count, // Numeric value (total count)
-                        fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                    }));
-        
-                    setPresentPlaceOfWorkData(formattedData);
+                    setPresentPlaceOfWorkData(filteredLatestData);
         
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -216,34 +169,7 @@ export default function AlumniAnalytics() {
         
                     console.log("Filtered Latest Data:", filteredLatestData);
         
-                    // Group by answer (choices) and aggregate their counts
-                    const groupedData = Object.values(
-                        filteredLatestData.reduce((acc, item) => {
-                            const answerKey = item.choices; // Use answer/choice as the grouping key
-                            if (!acc[answerKey]) {
-                                acc[answerKey] = {
-                                    ...item,
-                                    alumni: 1, // Start count at 1 for this answer
-                                };
-                            } else {
-                                acc[answerKey].alumni += 1; // Increment the count for this answer
-                            }
-                            return acc;
-                        }, {})
-                    );
-        
-                    console.log("Grouped Data with Count:", groupedData);
-        
-                    // Format data for display in the chart
-                    const formattedData = groupedData.map((item, index) => ({
-                        ...item,
-                        alumni: item.alumni || item.answer_count || 0, // Set to 0 if missing
-                        label: item.choices, // For display name
-                        value: item.alumni || item.answer_count, // Numeric value (total count)
-                        fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                    }));
-        
-                    setPresentFirstJobData(formattedData);
+                    setPresentFirstJobData(filteredLatestData);
         
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -316,32 +242,7 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    label: choice.choices, // For display name
-                    value: choice.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`,
-                }));
-    
-                setSingleBarChartData(formattedData);
+                setSingleBarChartData(filteredLatestData);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -377,33 +278,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    label: choice.choices, // For display name
-                    value: choice.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-    
-                setPresentOccupationData(formattedData);
+               
+                setPresentOccupationData(filteredLatestData);
     
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -436,34 +312,7 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-    
-                setPresentLineOfWorkData(formattedData);
+                setPresentLineOfWorkData(filteredLatestData);
     
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -484,31 +333,10 @@ export default function AlumniAnalytics() {
     
                 console.log("Year: ", yearFilteredData);
     
-                // Group all responses with the same choice into one label, and aggregate their counts
-                const groupedData = yearFilteredData.reduce((acc, item) => {
-                    const answerKey = item.choices; // Use answer/choice as the grouping key
+               
+
     
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            label: answerKey, // Group by the answer/choice
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {});
-    
-                console.log("Grouped Data with Counts:", groupedData);
-    
-                // Format the grouped data for display in the chart
-                const formattedData = Object.values(groupedData).map((item, index) => ({
-                    ...item,
-                    value: item.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-    
-                setPresentReasonStayingData(formattedData);
+                setPresentReasonStayingData(yearFilteredData);
     
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -545,34 +373,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentITRelatedData(formattedData);
+             
+                setPresentITRelatedData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -593,30 +395,8 @@ export default function AlumniAnalytics() {
                     const yearFilteredData = filterDataByYear(data, selectedYear);
 
       
-                // Group all responses with the same choice into one label, and aggregate their counts
-                const groupedData = yearFilteredData.reduce((acc, item) => {
-                    const answerKey = item.choices; // Use answer/choice as the grouping key
-    
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            label: answerKey, // Group by the answer/choice
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {});
-    
-                console.log("Grouped Data with Counts:", groupedData);
-    
-                // Format the grouped data for display in the chart
-                const formattedData = Object.values(groupedData).map((item, index) => ({
-                    ...item,
-                    value: item.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentReasonForAcceptData(formattedData);
+              
+                setPresentReasonForAcceptData(yearFilteredData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -636,30 +416,8 @@ export default function AlumniAnalytics() {
                     const yearFilteredData = filterDataByYear(data, selectedYear);
 
       
-                   // Group all responses with the same choice into one label, and aggregate their counts
-                   const groupedData = yearFilteredData.reduce((acc, item) => {
-                    const answerKey = item.choices; // Use answer/choice as the grouping key
-    
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            label: answerKey, // Group by the answer/choice
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {});
-    
-                console.log("Grouped Data with Counts:", groupedData);
-    
-                // Format the grouped data for display in the chart
-                const formattedData = Object.values(groupedData).map((item, index) => ({
-                    ...item,
-                    value: item.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentReasonForChangingData(formattedData);
+                
+                setPresentReasonForChangingData(yearFilteredData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -692,34 +450,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-    
-                setPresentStayingFirstJobData(formattedData);
+              
+                setPresentStayingFirstJobData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -752,33 +484,8 @@ export default function AlumniAnalytics() {
 
             console.log("Filtered Latest Data:", filteredLatestData);
 
-            // Group by answer (choices) and aggregate their counts
-            const groupedData = Object.values(
-                filteredLatestData.reduce((acc, choice) => {
-                    const answerKey = choice.choices; // Use answer/choice as the grouping key
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            ...choice,
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {})
-            );
-
-            console.log("Grouped Data with Count:", groupedData);
-
-            // Format data for display in the chart
-            const formattedData = groupedData.map((choice, index) => ({
-                ...choice,
-                alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                label: choice.choices, // For display name
-                value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-            }));
-                setPresentHowFindData(formattedData);
+         
+                setPresentHowFindData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -809,33 +516,7 @@ export default function AlumniAnalytics() {
 
     console.log("Filtered Latest Data:", filteredLatestData);
 
-    // Group by answer (choices) and aggregate their counts
-    const groupedData = Object.values(
-        filteredLatestData.reduce((acc, choice) => {
-            const answerKey = choice.choices; // Use answer/choice as the grouping key
-            if (!acc[answerKey]) {
-                acc[answerKey] = {
-                    ...choice,
-                    alumni: 1, // Start count at 1 for this answer
-                };
-            } else {
-                acc[answerKey].alumni += 1; // Increment the count for this answer
-            }
-            return acc;
-        }, {})
-    );
-
-    console.log("Grouped Data with Count:", groupedData);
-
-    // Format data for display in the chart
-    const formattedData = groupedData.map((choice, index) => ({
-        ...choice,
-        alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-        label: choice.choices, // For display name
-        value: choice.alumni || choice.answer_count, // Numeric value (total count)
-        fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-    }));
-                setPresentHowLongData(formattedData);
+                setPresentHowLongData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -866,33 +547,8 @@ export default function AlumniAnalytics() {
 
     console.log("Filtered Latest Data:", filteredLatestData);
 
-    // Group by answer (choices) and aggregate their counts
-    const groupedData = Object.values(
-        filteredLatestData.reduce((acc, choice) => {
-            const answerKey = choice.choices; // Use answer/choice as the grouping key
-            if (!acc[answerKey]) {
-                acc[answerKey] = {
-                    ...choice,
-                    alumni: 1, // Start count at 1 for this answer
-                };
-            } else {
-                acc[answerKey].alumni += 1; // Increment the count for this answer
-            }
-            return acc;
-        }, {})
-    );
-
-    console.log("Grouped Data with Count:", groupedData);
-
-    // Format data for display in the chart
-    const formattedData = groupedData.map((choice, index) => ({
-        ...choice,
-        alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-        label: choice.choices, // For display name
-        value: choice.alumni || choice.answer_count, // Numeric value (total count)
-        fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-    }));
-                setPresentPositionFirstData(formattedData);
+    
+                setPresentPositionFirstData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -924,33 +580,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentPositionPresentData(formattedData);
+               
+                setPresentPositionPresentData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -982,33 +613,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentInitialGrossData(formattedData);
+               
+                setPresentInitialGrossData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -1042,33 +648,8 @@ export default function AlumniAnalytics() {
     
                 console.log("Filtered Latest Data:", filteredLatestData);
     
-                // Group by answer (choices) and aggregate their counts
-                const groupedData = Object.values(
-                    filteredLatestData.reduce((acc, choice) => {
-                        const answerKey = choice.choices; // Use answer/choice as the grouping key
-                        if (!acc[answerKey]) {
-                            acc[answerKey] = {
-                                ...choice,
-                                alumni: 1, // Start count at 1 for this answer
-                            };
-                        } else {
-                            acc[answerKey].alumni += 1; // Increment the count for this answer
-                        }
-                        return acc;
-                    }, {})
-                );
-    
-                console.log("Grouped Data with Count:", groupedData);
-    
-                // Format data for display in the chart
-                const formattedData = groupedData.map((choice, index) => ({
-                    ...choice,
-                    alumni: choice.alumni || choice.answer_count || 0, // Set to 0 if missing
-                    label: choice.choices, // For display name
-                    value: choice.alumni || choice.answer_count, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentRelevantCurriculumData(formattedData);
+              
+                setPresentRelevantCurriculumData(filteredLatestData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -1088,30 +669,8 @@ export default function AlumniAnalytics() {
                     const yearFilteredData = filterDataByYear(data, selectedYear);
 
              
-                // Group all responses with the same choice into one label, and aggregate their counts
-                const groupedData = yearFilteredData.reduce((acc, item) => {
-                    const answerKey = item.choices; // Use answer/choice as the grouping key
-    
-                    if (!acc[answerKey]) {
-                        acc[answerKey] = {
-                            label: answerKey, // Group by the answer/choice
-                            alumni: 1, // Start count at 1 for this answer
-                        };
-                    } else {
-                        acc[answerKey].alumni += 1; // Increment the count for this answer
-                    }
-                    return acc;
-                }, {});
-    
-                console.log("Grouped Data with Counts:", groupedData);
-    
-                // Format the grouped data for display in the chart
-                const formattedData = Object.values(groupedData).map((item, index) => ({
-                    ...item,
-                    value: item.alumni, // Numeric value (total count)
-                    fill: `hsl(var(--chart-${index + 1}))`, // Color for chart
-                }));
-                setPresentCompetenciesData(formattedData);
+                
+                setPresentCompetenciesData(yearFilteredData);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -1132,7 +691,7 @@ export default function AlumniAnalytics() {
             description={description}
             response={title=="Employemnt Status"?"Alumni":"Responses"}
             addButton={  <PDFDownloadLink
-                document={<AnalyticsReport data={ItrelatedReport}  title = {title} />}
+                document={<AnalyticsReport data={data}  title = {title} />}
                 fileName={`${title}.pdf`}
                
             >
@@ -1198,11 +757,11 @@ const generateYearOptions = () => {
                     <SelectGroup>
                         <SelectLabel>Years</SelectLabel>
                         <SelectItem value="0" onClick={() => handleYearChange({ target: { value: "0" } })}>All year</SelectItem>
-                        {generateYearOptions().map((year) => (
-                            <SelectItem key={year} value={year} onClick={() => handleYearChange({ target: { value: year } })}>
-                                {year}
-                            </SelectItem>
-                        ))}
+                        {[...(raw ? new Set(raw.map((item) => item.year)) : [])].map((year) => (
+      <SelectItem key={year} value={year}>
+        {year}
+      </SelectItem>
+    ))}
                     </SelectGroup>
                 </SelectContent>
                 

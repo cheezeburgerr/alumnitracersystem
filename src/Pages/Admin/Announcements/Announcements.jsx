@@ -150,7 +150,7 @@ export default function Announcements() {
                     </Dialog>
                 }
             >
-                <DataTable columns={columns({ data, setData })} data={data} getColumn={"announcement_title"} />
+                <DataTable columns={columns({ data, setData })} data={data} getColumn={"announcement_title"} page={"announcement"} />
             </AdminLayout>
         </>
     );

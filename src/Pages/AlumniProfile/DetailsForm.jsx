@@ -32,7 +32,7 @@ const detailsFormSchema = z.object({
     // college: z.string().min(2, { message: "College must be at least 2 characters." }),
     year: z.string().min(1, { message: "Please select a valid year." }),
     honors: z.string().optional(),
-    prof_exams: z.string().optional(),
+    // prof_exams: z.string().optional(),
     // date_taken: z.string().optional(),
     // rating: z.string().optional(),
 });
@@ -85,6 +85,7 @@ export function DetailsForm({ id }) {
 
     const onSubmit = (data) => {
         console.log("Form data submitted: ", data);
+     
         // Make the API call here
         axios
             .put(`${API_BASE_URL}/users/${user2.id}`, data)
@@ -272,7 +273,7 @@ export function DetailsForm({ id }) {
                     )}
                 />
 
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="prof_exams"
                     render={({ field }) => (
@@ -284,7 +285,7 @@ export function DetailsForm({ id }) {
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                /> */}
 
                 {/* <FormField
                     control={form.control}

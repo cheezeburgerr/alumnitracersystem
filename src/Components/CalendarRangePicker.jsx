@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { addDays, format, parseISO } from "date-fns";
-import { Input } from "@/components/ui/input"
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,11 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-function CalendarDateRangePicker({
-  className,
-  setSelectedDateRange,
-  initialSelectedDateRange,
-}) {
+function CalendarDateRangePicker({ className, setSelectedDateRange, initialSelectedDateRange }) {
   const [date, setDate] = useState({
     from: initialSelectedDateRange?.from || '',
     to: initialSelectedDateRange?.to || '',
@@ -34,12 +29,15 @@ function CalendarDateRangePicker({
   }, [initialSelectedDateRange]);
 
   const handleDateSelect = (selected) => {
+    // Ensure the selected dates are valid Date objects
     const selectedFrom = selected?.from ? new Date(selected.from) : null;
     const selectedTo = selected?.to ? new Date(selected.to) : null;
 
+    // Format dates to 'YYYY-MM-DD' in local time zone
     const formattedFrom = selectedFrom ? format(selectedFrom, "yyyy-MM-dd") : '';
     const formattedTo = selectedTo ? format(selectedTo, "yyyy-MM-dd") : '';
 
+    // Validate date range
     if (formattedFrom && formattedTo && formattedTo < formattedFrom) {
         alert("End date must be after start date");
         return;
@@ -51,25 +49,12 @@ function CalendarDateRangePicker({
     };
 
     setDate(normalizedDates);
-    setSelectedDateRange(normalizedDates);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const newDate = { ...date, [name]: value };
-
-    if (newDate.from && newDate.to && new Date(newDate.to) < new Date(newDate.from)) {
-      alert("End date must be after start date");
-      return;
-    }
-
-    setDate(newDate);
-    setSelectedDateRange(newDate);
-  };
+    setSelectedDateRange(normalizedDates); // Update the parent component with normalized dates
+};
 
   return (
     <div className={cn("grid gap-2", className)}>
-      {/* <Popover>
+      <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -105,26 +90,7 @@ function CalendarDateRangePicker({
             numberOfMonths={2}
           />
         </PopoverContent>
-      </Popover> */}
-
-      {/* Date Inputs */}
-      <div className="flex gap-2 mt-2">
-        <Input
-          type="date"
-          name="from"
-          value={date.from || ''}
-          onChange={handleInputChange}
-          className="w-1/2 p-2 border rounded"
-        />
-        <Input
-          type="date"
-          name="to"
-          value={date.to || ''}
-          onChange={handleInputChange}
-          className="w-1/2 p-2 border rounded"
-          
-        />
-      </div>
+      </Popover>
     </div>
   );
 }

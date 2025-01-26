@@ -110,7 +110,7 @@ export const columns = [
                         </DropdownMenuItem> */}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem><Link to={`/admin/view-alumni/${id}`}>View Alumni</Link></DropdownMenuItem>
-                        <DropdownMenuItem>Archive</DropdownMenuItem>
+                        {/* <DropdownMenuItem>Archive</DropdownMenuItem> */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

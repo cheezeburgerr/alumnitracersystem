@@ -22,6 +22,9 @@ import moment from "moment";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { toast } from "../hooks/use-toast";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import AlumniDetailsReport from "./Reports/AlumniDetailsReport";
+
 export default function EmploymentDetails({ userId }) {
     const [employmentData, setEmploymentData] = useState(null);
     const [status, setStatus] = useState(null);
@@ -33,6 +36,9 @@ export default function EmploymentDetails({ userId }) {
     const [position, setPosition] = useState();
     const [question, setQuestion] = useState([]);
     const [selectedAnswer, setSelectedAnswer] = useState({});
+    const [userData,setUserData] = useState();
+    const [reportData,setReportData] = useState([])
+
 
     const [updated, setUpdated] = useState();
     const { id } = useParams();
@@ -46,19 +52,49 @@ export default function EmploymentDetails({ userId }) {
     useEffect(() => {
         const fetchEmploymentDetails = async () => {
             try {
+                
                 const response = await axios.get(`${API_BASE_URL}/useremploymentstatus/${id}`);
+                const answerData = response.data.answers.map((item) => ({
+                    question: item.question.questions,
+                    answer: Array.isArray(item.answer) ? item.answer : [item.answer]
+                  }))
+
+                const groupedAnswers = answerData.reduce((acc, { question, answer }) => {
+                    // Find if the question already exists in the accumulator
+                    const existing = acc.find(item => item.question === question);
+                    
+                    if (existing) {
+                      // If question exists, push the answer into the array
+                      existing.answer.push(...answer);
+                    } else {
+                      // If not, create a new entry with the question and answer
+                      acc.push({ question, answer });
+                    }
+                    return acc;
+                  }, []);
+                setReportData(groupedAnswers);
                 setEmploymentData(response.data);
                 setStatus(response.data?.status?.status);
                 setCompany(response.data?.answers.find(answer => answer.employment_questions_ID == 3)?.answer);
                 setPosition(response.data?.answers.find(answer => answer.employment_questions_ID == 16)?.answer);
                 setJobType(response.data?.answers.find(answer => answer.employment_questions_ID == 2)?.answer);
+                setUserData(response.data?.user);
 
                 // Pre-fill selected answers
                 const prefilledAnswers = {};
+
+                // Loop through each answer and group them by employment_questions_ID
                 response.data.answers.forEach(answer => {
-                    prefilledAnswers[answer.employment_questions_ID] = answer.answer;
+                    if (!prefilledAnswers[answer.employment_questions_ID]) {
+                        prefilledAnswers[answer.employment_questions_ID] = [];
+                    }
+                    prefilledAnswers[answer.employment_questions_ID].push(answer.answer);
                 });
+                
+                console.log(prefilledAnswers);
+                
                 setSelectedAnswer(prefilledAnswers);
+                console.log('answers',prefilledAnswers)
             } catch (error) {
                 console.error("Error fetching employment details:", error);
             }
@@ -80,18 +116,32 @@ export default function EmploymentDetails({ userId }) {
         fetchQuestion();
     }, []);
 
-    const handleInputChange = (value) => {
-        setSelectedAnswer(value);
+    const handleInputChange = (newValue) => {
+        setSelectedAnswer((prev) => ({
+            ...prev, // Spread the previous state
+            16: [newValue] // Update index 16
+        }));
     };
+    
 
     const onSubmit = async () => {
         try {
-            await axios.put(`${API_BASE_URL}/employmentanswer/${id}`, {
+            await axios.post(`${API_BASE_URL}/employmentanswer`,
+            {
                 user_ID: user.id,
-                employment_question_ID: 16,
-                answer: selectedAnswer.toString(),
-                user_employment_status_ID: id,
-            });
+                status: 1,
+                answers:  Object.keys(selectedAnswer).map(key => ({
+                    id: parseInt(key),  // Convert key back to integer (index as ID)
+                    value: selectedAnswer[key] // Set array as value
+                })),
+                "files": [
+                  {
+                    "id": 4,
+                    "value": "file1.pdf"
+                  }
+                ]
+              }
+        );
 
             setIsDialogOpen(false);
             toast({
@@ -108,7 +158,9 @@ export default function EmploymentDetails({ userId }) {
     };
 
     return (
-        <AlumniLayout>
+        <AlumniLayout   
+        
+        >
             <Breadcrumb className="mb-4">
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -121,11 +173,27 @@ export default function EmploymentDetails({ userId }) {
                 </BreadcrumbList>
             </Breadcrumb>
 
+          
+
             {employmentData ? (
                 <Card>
                     <CardHeader>
                         <div className="flex justify-between w-full items-center">
                             <h1 className="font-bold text-2xl">Employment Status</h1>
+                            <PDFDownloadLink
+                document={<AlumniDetailsReport user={userData} data={reportData}/>}
+                fileName="alumni_report.pdf"
+            >
+                {({ loading }) =>
+                    loading ? (
+                        <Button variant="outline" disabled>
+                            Generating Report...
+                        </Button>
+                    ) : (
+                        <Button variant="outline">Download Report</Button>
+                    )
+                }
+            </PDFDownloadLink>
                             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                 <DialogTrigger asChild>
                                     {status == "Employed" && (
@@ -147,7 +215,7 @@ export default function EmploymentDetails({ userId }) {
                                             <>
                                                 <Label>{question.questions}</Label>
                                                 <RadioGroup
-                                                    value={selectedAnswer || ""}
+                                                    value={selectedAnswer["16"][0] || ""}
                                                     onValueChange={(value) =>
                                                         handleInputChange(value)
                                                     }
@@ -159,7 +227,7 @@ export default function EmploymentDetails({ userId }) {
                                                                     value={answer.choices}
                                                                     id={`${answer.choices}-${i}`}
                                                                     checked={
-                                                                        selectedAnswer ===
+                                                                        selectedAnswer['16'][0] ===
                                                                         answer.choices
                                                                     }
                                                                 />

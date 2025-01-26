@@ -19,11 +19,12 @@ import {
   Settings2,
 } from "lucide-react"
 
-
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
@@ -44,13 +45,15 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+
 import { parseISO, startOfDay, endOfDay } from "date-fns";
 import CalendarDateRangePicker from '@/components/CalendarRangePicker';
 import { useEffect, useState } from "react";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { statuses } from "./data";
 
-export function DataTable({ columns, data, getColumn = 'student_ID', onFilterChange }) {
+export function DataTable({ columns, data, getColumn = 'student_ID', onFilterChange,setYearFilter,yearFilter,raw,page }) {
   const [sorting, setSorting] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState([])
   const [columnFilters, setColumnFilters] = useState(
@@ -100,6 +103,7 @@ export function DataTable({ columns, data, getColumn = 'student_ID', onFilterCha
 
   return (
     <div>
+      {/* {JSON.stringify(data)} */}
       <div className="flex items-center gap-2 py-4">
         <div className="flex gap-2 items-center">
           <Input
@@ -110,9 +114,26 @@ export function DataTable({ columns, data, getColumn = 'student_ID', onFilterCha
             }
             className="h-8 w-[150px] lg:w-[250px]"
           />
-          <CalendarDateRangePicker setSelectedDateRange={setSelectedDateRange} />
+           <Select id="yearFilter" value={yearFilter} onValueChange={setYearFilter}  >
+  <SelectTrigger className={`w-[180px] ${page!="masterlist" || page==undefined?'hidden':'show'}`}>
+    <SelectValue placeholder="Select a batch" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value={null}>All Year</SelectItem>
+    {[...(raw ? new Set(raw.map((item) => item.year)) : [])].map((year) => (
+      <SelectItem key={year} value={year}>
+        {year}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+          <CalendarDateRangePicker setSelectedDateRange={setSelectedDateRange}
+           className={page!="announcement" || page==undefined?'hidden':'show'}
+          />
           {table.getColumn("status") && (
             <DataTableFacetedFilter
+           
               column={table.getColumn("status")}
               title="Status"
               options={statuses}

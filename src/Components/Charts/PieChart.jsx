@@ -22,17 +22,44 @@ import {
 export default function PieChartComponent({ data,title,description,response,addButton }) {
   console.log(data);
 
-  const totalValue = useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.value, 0);
+  // Group by answer (choices) and aggregate their counts
+  const groupedData = useMemo(() => {
+    return Object.values(
+      data.reduce((acc, choice) => {
+        const answerKey = choice.choices;
+        if (!acc[answerKey]) {
+          acc[answerKey] = {
+            ...choice,
+            alumni: 1,
+          };
+        } else {
+          acc[answerKey].alumni += 1;
+        }
+        return acc;
+      }, {})
+    );
   }, [data]);
 
-  const chartData = useMemo(() => {
-    return data.map((item, index) => ({
-      label: item.label, // For display name
-      value: item.value, // Numeric value
-      fill: `hsl(var(--chart-${index + 1}))`, // Dynamic colors
+  console.log("Grouped Data with Count:", groupedData);
+
+  // Format data for display in the chart
+  const formattedData = useMemo(() => {
+    const total = groupedData.reduce((acc, curr) => acc + curr.alumni, 0);
+    return groupedData.map((choice, index) => ({
+      ...choice,
+      alumni: choice.alumni || choice.answer_count || 0,
+      label: `${choice.choices} ${((choice.alumni / total) * 100).toFixed(2)}% `  , // Using choices as the label
+      value: choice.alumni || choice.answer_count,
+      fill: `hsl(var(--chart-${index + 1}))`,
     }));
-  }, [data]);
+  }, [groupedData]);
+
+  console.log("Formatted Chart Data:", formattedData);
+
+  const totalValue = useMemo(() => {
+    return formattedData.reduce((acc, curr) => acc + curr.value, 0);
+  }, [formattedData]);
+
 
   // const chartConfig = data.reduce((config, item, index) => {
   //   const colorIndex = index + 1;
@@ -76,7 +103,7 @@ export default function PieChartComponent({ data,title,description,response,addB
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={data}
+              data={formattedData}
               dataKey="value"
               nameKey="label"
               innerRadius={60}

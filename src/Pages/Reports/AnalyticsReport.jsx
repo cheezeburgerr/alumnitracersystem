@@ -31,12 +31,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
+    marginBottom: 20,
   },
   tableRow: {
     flexDirection: "row",
   },
   tableCol: {
-    width: "16.6%",
+    width: "20.6%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
@@ -55,29 +56,42 @@ const styles = StyleSheet.create({
 });
 
 // Define the PDF Document
-const AnalyticsReport = ({ data, generatedBy,title }) => (
-  <Document>
-    <Page size="A4" orientation="landscape" style={styles.page}>
-      <View style={[styles.mb2, styles.hr]}>
-        <Text style={styles.header}>Pangasinan State University - San Carlos City Campus</Text>
-        <Text style={[styles.header, styles.mb2]}> {title}</Text>
-      </View>
-      <View style={styles.table}>
-        {/* Table Header */}
-        <View style={styles.tableRow}>
-        <View style={[styles.tableCol,{width: "4.6%"}]}>
-            <Text style={styles.tableCell}>No.</Text>
-          </View>
-          <View style={[styles.tableCol,{width: "8.6%"}]}>
-            <Text style={styles.tableCell}>Student ID</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>Name</Text>
-          </View>
-          {/* <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>Birthday</Text>
-          </View> */}
-          <View style={styles.tableCol}>
+const AnalyticsReport = ({ data, generatedBy, title }) => {
+  // Group the data by the 'choices' field dynamically
+  const groupedData = data.reduce((acc, row) => {
+    
+    const { choices } = row;
+    if (!acc[choices]) {
+      acc[choices] = [];
+    }
+    acc[choices].push(row);
+    return acc;
+  }, {});
+
+  return (
+    <Document>
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <View style={[styles.mb2, styles.hr]}>
+          <Text style={styles.header}>Pangasinan State University - San Carlos City Campus</Text>
+          <Text style={[styles.header, styles.mb2]}>{title}</Text>
+        </View>
+
+        {/* Dynamically render tables for each unique choice */}
+        {Object.keys(groupedData).map((choice, index) => (
+          <React.Fragment key={index}>
+            <Text style={styles.header}>{title=="IT-Related Jobs"?choice=="Yes"?"IT-Related":"Non-IT-Related":choice}</Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <View style={[styles.tableCol, { width: "4.6%" }]}>
+                  <Text style={styles.tableCell}>No.</Text>
+                </View>
+                <View style={[styles.tableCol, { width: "8.6%" }]}>
+                  <Text style={styles.tableCell}>Student ID</Text>
+                </View>
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>Name</Text>
+                </View>
+                <View style={styles.tableCol}>
             <Text style={styles.tableCell}>Email</Text>
           </View>
           <View style={styles.tableCol}>
@@ -89,24 +103,21 @@ const AnalyticsReport = ({ data, generatedBy,title }) => (
           <View style={[styles.tableCol,{width: "4.6%"}]}>
             <Text style={styles.tableCell}>Batch</Text>
           </View>
-          
-        </View>
-        {/* Table Rows */}
-        {data.map((row, index) => (
-          <View style={styles.tableRow} key={index}>
-              <View style={[styles.tableCol,{width: "4.6%"}]}>
-              <Text style={styles.tableCell}>{index+1}</Text>
-            </View>
-            <View style={[styles.tableCol,{width: "8.6%"}]}>
-              <Text style={styles.tableCell}>{row.student_id}</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{row.first_name} {row.middle_name} {row.last_name}</Text>
-            </View>
-            {/* <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{moment(row.birthday).format("MMMM DD, YYYY")}</Text>
-            </View> */}
-            <View style={styles.tableCol}>
+              </View>
+              {groupedData[choice].map((row, index) => (
+                <View style={styles.tableRow} key={index}>
+                  <View style={[styles.tableCol, { width: "4.6%" }]}>
+                    <Text style={styles.tableCell}>{index + 1}</Text>
+                  </View>
+                  <View style={[styles.tableCol, { width: "8.6%" }]}>
+                    <Text style={styles.tableCell}>{row.student_id}</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {row.first_name} {row.middle_name} {row.last_name}
+                    </Text>
+                  </View>
+                  <View style={styles.tableCol}>
               <Text style={styles.tableCell}>{row.email}</Text>
             </View>
             <View style={styles.tableCol}>
@@ -118,15 +129,19 @@ const AnalyticsReport = ({ data, generatedBy,title }) => (
             <View style={[styles.tableCol,{width: "4.6%"}]}>
               <Text style={styles.tableCell}>{row.year}</Text>
             </View>
-          </View>
+                </View>
+              ))}
+            </View>
+          </React.Fragment>
         ))}
-      </View>
-      <Text style={styles.footer}>
-        Report auto-generated by {generatedBy || "System"} on{" "}
-        {moment().format("MMMM DD, YYYY, h:mm A")}.
-      </Text>
-    </Page>
-  </Document>
-);
+
+        <Text style={styles.footer}>
+          Report auto-generated by {generatedBy || "System"} on{" "}
+          {moment().format("MMMM DD, YYYY, h:mm A")}.
+        </Text>
+      </Page>
+    </Document>
+  );
+};
 
 export default AnalyticsReport;

@@ -10,30 +10,57 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import AlumniDetailsReport from "../../Pages/Reports/AlumniDetailsReport";
 import axios from "axios";
 import { API_BASE_URL } from "../../Components/api";
 import { useParams } from "react-router-dom";
 import LoadingState from "../../Components/LoadingState";
 import moment from "moment";
 import AdminLayout from "../../Layouts/AdminLayout";
-
+import { Button } from "@/Components/ui/button";
 export default function AlumniEmploymentDetails({ userId }) {
     const [employmentData, setEmploymentData] = useState(null);
     const [status, setStatus] = useState(null);
 
     const [company, setCompany] = useState();
     const [jobtype, setJobType] = useState();
+    const [position,setPosition] = useState();
+    const [userData,setUserData] = useState();
+    const [reportData,setReportData] = useState([])
 
     const { id } = useParams();
     useEffect(() => {
         const fetchEmploymentDetails = async () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/useremploymentstatus/${id}`);
+                const answerData = response.data.answers.map((item) => ({
+                    question: item.question.questions,
+                    answer: Array.isArray(item.answer) ? item.answer : [item.answer]
+                  }))
+
+                const groupedAnswers = answerData.reduce((acc, { question, answer }) => {
+                    // Find if the question already exists in the accumulator
+                    const existing = acc.find(item => item.question === question);
+                    
+                    if (existing) {
+                      // If question exists, push the answer into the array
+                      existing.answer.push(...answer);
+                    } else {
+                      // If not, create a new entry with the question and answer
+                      acc.push({ question, answer });
+                    }
+                    return acc;
+                  }, []);
+                setReportData(groupedAnswers);
+                  
+                  
                 setEmploymentData(response.data);
                 setStatus(response.data?.status?.status);
-
+                setUserData(response.data?.user)
                 setCompany(response.data?.answers.find(answer => answer.employment_questions_ID == 3)?.answer)
                 setJobType(response.data?.answers.find(answer => answer.employment_questions_ID == 2)?.answer)
+                setPosition(response.data?.answers.find(answer => answer.employment_questions_ID == 16)?.answer);
 
                 // console.log(response.data.answers.find(answer => answer.employment_questions_ID == 3))
             } catch (error) {
@@ -68,8 +95,24 @@ export default function AlumniEmploymentDetails({ userId }) {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
+        }
+        
+        addButton={
+            <PDFDownloadLink
+                document={<AlumniDetailsReport user={userData} data={reportData}/>}
+                fileName="alumni_report.pdf"
+            >
+                {({ loading }) =>
+                    loading ? (
+                        <Button variant="outline" disabled>
+                            Generating Report...
+                        </Button>
+                    ) : (
+                        <Button variant="outline">Download Report</Button>
+                    )
+                }
+            </PDFDownloadLink>
         }>
-
 
             {employmentData ? (
                 <Card>
@@ -85,6 +128,7 @@ export default function AlumniEmploymentDetails({ userId }) {
                                         <h3 className="font-bold">{company}</h3>
                                         <div className="text-sm">
                                             <p>{jobtype}</p>
+                                            <p>{position}</p>
                                             <p>{moment(employmentData.created_at).format("MMMM D, YYYY")}</p>
                                         </div>
                                     </div>
