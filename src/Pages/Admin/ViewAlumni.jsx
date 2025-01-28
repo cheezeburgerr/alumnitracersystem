@@ -183,7 +183,7 @@ export default function ViewAlumni() {
                                             </tr >
                                             <tr className="border-b">
                                                 <th>Birthday</th>
-                                                <td className="py-2">{moment(user.birthday).format('MMMM d, YYYY') || 'NA'}</td>
+                                                <td className="py-2">{moment(user.birthday).format('MMMM D, YYYY') || 'NA'}</td>
                                             </tr>
                                             <tr className="border-b">
                                                 <th>Address</th>
