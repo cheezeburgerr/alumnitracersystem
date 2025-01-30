@@ -782,7 +782,7 @@ const generateYearOptions = () => {
   'user_count', 
   'employment_status', 
   "Employemnt Status", 
-  "Employement Distribution"
+  "Employment Distribution"
 )}
            
                     </div>
@@ -792,8 +792,8 @@ const generateYearOptions = () => {
   singleBarChartData, 
   'user_count', 
   'employment_status', 
-  "Employment Status Choices", 
-  "Choices and Answer Counts"
+  "Present Employment Status of Alumni", 
+  "Distribution of alumni by employment type"
 )}
 
                     </div>
