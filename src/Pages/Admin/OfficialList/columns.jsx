@@ -88,6 +88,12 @@ export const columns = [
             )
         },
     },
+    {
+        accessorKey: "year",
+        header: ({ column }) => {
+          return <DataTableColumnHeader column={column} title="Batch" />;
+        },
+      },
 {
     id: "actions",
         cell: ({ row }) => {

@@ -50,6 +50,7 @@ export const columns = ({ data, setData }) => [
       return <DataTableColumnHeader column={column} title="Email" />;
     },
   },
+
   {
     accessorKey: "created_at",
     header: ({ column }) => {
@@ -60,6 +61,12 @@ export const columns = ({ data, setData }) => [
     },
     id: 'created_at',
     
+  },
+  {
+    accessorKey: "year",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Batch" />;
+    },
   },
   {
     id: "actions",

@@ -151,35 +151,40 @@ const AlumniReport = ({ user, generatedBy }) => (
         </Text>
       </View>
 
-      {/* Employment History Section */}
-      <View style={styles.section}>
-        <Text style={styles.subheader}>Employment History</Text>
-        {user?.statuses?.map((status, index) => (
-          <View key={index} style={styles.section}>
+{/* Employment History Section */}
+<View style={styles.section}>
+  <Text style={styles.subheader}>Employment History</Text>
+  {user?.statuses?.length > 0 ? (
+    user.statuses.map((status, index) => (
+      <View key={index} style={styles.section}>
+        <Text style={styles.content}>
+          <Text style={styles.label}>Status: </Text>
+          {status.status.status}
+        </Text>
+        {status.status.status === 'Employed' && (
+          <>
             <Text style={styles.content}>
-              <Text style={styles.label}>Status: </Text>
-              {status.status.status}
+              <Text style={styles.label}>Company: </Text>
+              {status.answers.find((answer) => answer.employment_questions_ID === 3)?.answer || "No answer available"}
             </Text>
-            {status.status.status === 'Employed' && (
-              <>
-                <Text style={styles.content}>
-                  <Text style={styles.label}>Company: </Text>
-                  {status.answers.find((answer) => answer.employment_questions_ID === 3)?.answer || "No answer available"}
-                </Text>
-                <Text style={styles.content}>
-                  <Text style={styles.label}>Type: </Text>
-                  {status.answers.find((answer) => answer.employment_questions_ID === 2)?.answer || "No answer available"}
-                </Text>
-              </>
-            )}
             <Text style={styles.content}>
-              <Text style={styles.label}>Date: </Text>
-              {moment(status.created_at).format('MMMM DD YYYY')}
+              <Text style={styles.label}>Type: </Text>
+              {status.answers.find((answer) => answer.employment_questions_ID === 2)?.answer || "No answer available"}
             </Text>
-            <View style={styles.hr} />
-          </View>
-        ))}
+          </>
+        )}
+        <Text style={styles.content}>
+          <Text style={styles.label}>Date: </Text>
+          {moment(status.created_at).format('MMMM DD YYYY')}
+        </Text>
+        <View style={styles.hr} />
       </View>
+    ))
+  ) : (
+    <Text style={styles.content}>N/A</Text>
+  )}
+</View>
+
 
       {/* Footer Section */}
       <Text style={styles.footer}>

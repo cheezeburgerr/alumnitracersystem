@@ -68,6 +68,8 @@ const AnalyticsReport = ({ data, generatedBy, title }) => {
     return acc;
   }, {});
 
+  console.log("Grouped data: ",data)
+
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
@@ -79,7 +81,7 @@ const AnalyticsReport = ({ data, generatedBy, title }) => {
         {/* Dynamically render tables for each unique choice */}
         {Object.keys(groupedData).map((choice, index) => (
           <React.Fragment key={index}>
-            <Text style={styles.header}>{title=="IT-Related Jobs"?choice=="Yes"?"IT-Related":"Non-IT-Related":choice}</Text>
+            <Text style={styles.header}>{title=="IT-Related Jobs"?choice=="Yes"?"IT-Related":"Non-IT-Related":choice} {`${((data.filter(item => item.choices == choice).length / data.length) * 100).toFixed(2)}% ` }  </Text>
             <View style={styles.table}>
               <View style={styles.tableRow}>
                 <View style={[styles.tableCol, { width: "4.6%" }]}>
