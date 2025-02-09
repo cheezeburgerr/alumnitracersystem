@@ -689,7 +689,7 @@ export default function AlumniAnalytics() {
             nameKey={nameKey}
             title={title}
             description={description}
-            response={title=="Employemnt Status"?"Alumni":"Responses"}
+            response={title=="Employment Status"?"Alumni":"Responses"}
             addButton={  <PDFDownloadLink
                 document={<AnalyticsReport data={data}  title = {title} />}
                 fileName={`${title}.pdf`}
@@ -781,7 +781,7 @@ const generateYearOptions = () => {
   chartData, 
   'user_count', 
   'employment_status', 
-  "Employemnt Status", 
+  "Employment Status", 
   "Employment Distribution"
 )}
            

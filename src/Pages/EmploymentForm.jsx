@@ -81,18 +81,18 @@ export default function EmploymentForm() {
             };
         });
     };
-
     const handleFileInputChange = (questionId, file) => {
         setFormData((prevState) => {
-            const updatedFiles = prevState.files.filter((fileItem) => fileItem.id !== questionId);
-            updatedFiles.push({ id: questionId, value: file }); // Store the file directly in the new array
+            const updatedFiles = [...prevState.files];  // Make a copy of the previous files array
+            updatedFiles.push(file);  // Add the new file to the copied array
+    
             return {
                 ...prevState,
-                files: updatedFiles,
+                files: updatedFiles,  // Update the files state with the new array
             };
         });
     };
-
+    
 
     useEffect(() => {
         const fetchEmploymentStatus = async () => {
@@ -107,49 +107,58 @@ export default function EmploymentForm() {
         fetchEmploymentStatus();
     }, []);
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
             return;
         }
+    
+        const formDataToSend = new FormData();
+    
+        // Append non-file data
+        formDataToSend.append("user_ID", formData.user_ID);
+        formDataToSend.append("status", formData.status);
+        formDataToSend.append("answers", JSON.stringify(formData.answers));
+    
+   // Append each file separately
+   console.log(formData.files);
 
+formData.files.forEach((file, index) => {
+    formDataToSend.append(`files[${index}]`,  file);
+}); 
+    
+        console.log("Submitting form data:", Object.fromEntries(formDataToSend));
+    
         try {
-            const response = await axios.post(`${API_BASE_URL}/employmentanswer`, {
-                user_ID: formData.user_ID, // Include the user ID
-                status: formData.status, // Include the status
-                answers: formData.answers, // Include the answers array
-                files: formData.files,
-            }, {
+            const response = await axios.post(`${API_BASE_URL}/employmentanswer`, formDataToSend, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data",
                 }
             });
-
-            // Check for successful response
+    
             if (response.status !== 201) {
                 throw new Error("Failed to submit form");
             }
-
+    
             const data = response.data;
-
+    
             toast({
-                    
                 title: response.data.message,
                 description: new Date().toString(),
-              })
-
-              localStorage.setItem('user', JSON.stringify(response.data.data));
-              navigate('/');
+            });
+    
+            localStorage.setItem('user', JSON.stringify(response.data.data));
+            navigate('/');
             console.log("Form submitted successfully:", data);
         } catch (error) {
             console.error("Error submitting form:", error);
         }
     };
-
+    
+    
     // Validate form data
     const validateForm = () => {
         const formErrors = {};
@@ -167,10 +176,10 @@ export default function EmploymentForm() {
             if (question.question_type === "text" && !formData.answers.find(answer => answer.id === question.id)) {
                 formErrors[question.id] = "This field is required.";
             }
-            // For file upload
-            if (question.question_type === "file" && !formData.files.find(answer => answer.id === question.id)) {
+            if (question.question_type === "file" && (!formData.files || formData.files.length === 0)) {
                 formErrors[question.id] = "Please upload a file.";
             }
+            
         });
 
         return formErrors;
@@ -186,7 +195,7 @@ export default function EmploymentForm() {
 
     return (
         <AlumniLayout>
-            <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+            <form onSubmit={handleSubmit}  className="max-w-4xl mx-auto">
                 <h1 className="font-bold text-2xl mb-4">Employment Form</h1>
                 <Card>
                     <CardHeader>
@@ -296,7 +305,7 @@ export default function EmploymentForm() {
                 </Card>
                 <div className="flex justify-between items-center my-4">
                
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" >Submit</Button>
                     <Button type="button" variant="outline" onClick={() => setFormData({ answers: [] })}>
                         Reset
                     </Button>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet, Image } from "@react-pdf/renderer";
 import moment from "moment";
 
 const styles = StyleSheet.create({
@@ -54,6 +54,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: "center",
     color: "#888",
+  },
+  image: {
+    width: "100px",
+    height: "100px",
+    marginBottom: 10,
+    alignSelf: "center",  // Center the image
   },
 });
 
@@ -119,6 +125,8 @@ const AlumniDetailsReport = ({ user, generatedBy,data }) => {
           <Text style={styles.subheader}>Employment Information</Text>
           <View style={styles.table}>
             {data.map((item, index) => (
+              item.question == "Upload your company ID"?  <>
+            </>:
               <View key={index} style={styles.tableRow}>
                 <Text style={[styles.tableCol, { width: "40%" }]}>{item.question}:</Text>
                 <Text style={styles.tableCol}>{item.answer.join(", ")}</Text>

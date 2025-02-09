@@ -15,7 +15,7 @@ import {
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import axios from "axios";
-import { API_BASE_URL } from "../Components/api";
+import { API_BASE_URL  } from "../Components/api";
 import { useParams } from "react-router-dom";
 import LoadingState from "../Components/LoadingState";
 import moment from "moment";
@@ -262,29 +262,38 @@ export default function EmploymentDetails({ userId }) {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="grid lg:grid-cols-2 gap-4">
-                                    {Object.entries(
-                                        employmentData.answers
-                                            .sort((a, b) => a.employment_questions_ID - b.employment_questions_ID)
-                                            .reduce((acc, answer) => {
-                                                const questionText = answer.question.questions;
-                                                if (!acc[questionText]) acc[questionText] = [];
-                                                acc[questionText].push(answer);
-                                                return acc;
-                                            }, {})
-                                    ).map(([questionText, groupedAnswers]) => (
-                                        <div key={questionText} className="p-3 border-b">
-                                            <h6 className="font-semibold text-sm mb-2">{questionText}</h6>
+    {Object.entries(
+        employmentData.answers
+            .sort((a, b) => a.employment_questions_ID - b.employment_questions_ID)
+            .reduce((acc, answer) => {
+                const questionText = answer.question.questions;
+                if (!acc[questionText]) acc[questionText] = [];
+                acc[questionText].push(answer);
+                return acc;
+            }, {})
+    ).map(([questionText, groupedAnswers]) => (
+        <div key={questionText} className="p-3 border-b">
+            <h6 className="font-semibold text-sm mb-2">{questionText}</h6>
 
-                                            {groupedAnswers.map((answer) => (
-                                                <p key={answer.id}>
-                                                    {answer.answer || "No answer provided"}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
+            {groupedAnswers.map((answer) => (
+                questionText === "Upload your company ID" ? (
+                    <img
+                        key={answer.id}
+                        src={`${answer.answer}`}
+                        alt="Company ID"
+                        className="w-44 h-44 mx-auto rounded-lg" // Add any styling as needed
+                    />
+                ) : (
+                    <p key={answer.id}>
+                        {answer.answer || "No answer provided"}
+                    </p>
+                )
+            ))}
+        </div>
+    ))}
+</div>
+
                             </>
                         )}
                         {status === "Unemployed" && (

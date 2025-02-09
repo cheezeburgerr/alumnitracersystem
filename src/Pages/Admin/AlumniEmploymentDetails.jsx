@@ -147,12 +147,20 @@ export default function AlumniEmploymentDetails({ userId }) {
                                     ).map(([questionText, groupedAnswers]) => (
                                         <div key={questionText} className="p-3 border-b">
                                             <h6 className="font-semibold text-sm mb-2">{questionText}</h6>
-
                                             {groupedAnswers.map((answer) => (
-                                                <p key={answer.id}>
-                                                    {answer.answer || 'No answer provided'}
-                                                </p>
-                                            ))}
+                questionText === "Upload your company ID" ? (
+                    <img
+                        key={answer.id}
+                        src={`${answer.answer}`}
+                        alt="Company ID"
+                        className="w-44 h-44 mx-auto rounded-lg" // Add any styling as needed
+                    />
+                ) : (
+                    <p key={answer.id}>
+                        {answer.answer || "No answer provided"}
+                    </p>
+                )
+            ))}
 
                                         </div>
                                     ))}
